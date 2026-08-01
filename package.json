@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:rf-1.1": "playwright test casos/rf-1.1.spec.ts",
+    "report": "playwright show-report evidencias/reporte-html"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/her24770/software-tarea-4.git"
