@@ -16,6 +16,8 @@ test.describe('RF-1.2 - Sección de noticias', () => {
    const section_noticias = await get_section_noticias(page);
    const articulos = section_noticias.locator('article');
    await expect(articulos).toHaveCount(3)
+
+   await section_noticias.screenshot({path: 'evidencias/RF-1.2/TC-01-has-3-news.png'})
    });
 
 
@@ -37,6 +39,8 @@ test.describe('RF-1.2 - Sección de noticias', () => {
       await expect(fecha).toBeVisible()
       await expect(descripcion).toBeVisible()
    }
+
+   await section_noticias.screenshot({path: 'evidencias/RF-1.2/TC-02-each-news-has-title-date-and-description.png'})
    });
 
    //RF-1.2-03: Cada articulo tiene un elemento para acceder a más información
@@ -55,6 +59,8 @@ test.describe('RF-1.2 - Sección de noticias', () => {
         await expect(control).toBeVisible();
         await expect(control).toHaveText(/See more|Ver más/i);
     }
+
+    await section_noticias.screenshot({path: 'evidencias/RF-1.2/TC-03-each-news-has-see-more-control.png'})
 });
    
 });
