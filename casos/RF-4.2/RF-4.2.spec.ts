@@ -51,4 +51,21 @@ test.describe('RF-4.2 - Pago de renovación y notificación a contactos', () => 
       fullPage: true,
     });
   });
+
+  test('TC-RF-4.2-03 expone los contactos a notificar tras el pago (Administrativo, Técnico y Cobro)', async ({ page }) => {
+    await abrirDominioSinSesion(page);
+
+    await expect(page.getByRole('heading', { name: 'Contacto Administrativo' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Contacto Técnico' })).toBeVisible();
+
+    // El requisito exige notificar también al contacto de Cobro, pero la ficha del
+    // dominio no expone ningún "Contacto de Cobro": el sistema no puede estar
+    // cumpliendo esa parte del requisito porque el tercer destinatario ni siquiera existe.
+    await expect(page.getByRole('heading', { name: /Cobro/i })).toHaveCount(0);
+
+    await page.screenshot({
+      path: 'evidencias/RF-4.2/TC-03-contactos-sin-cobro.png',
+      fullPage: true,
+    });
+  });
 });
