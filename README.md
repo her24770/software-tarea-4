@@ -74,7 +74,7 @@ completo.
 | RF-3.1 | Carrito sin iniciar sesión (localStorage) | ✅ Hecho (falla por cambio en `gt.nic.gt`, ver arriba) |
 | RF-3.2 | Requiere sesión para finalizar la compra | ⬜ Pendiente |
 | RF-4.1 | Renovación de dominio sin sesión | ⬜ Pendiente |
-| RF-4.2 | Pago de renovación y notificación a contactos | ✅ Hecho (1 de 3 casos es manual, ver `RF-4.2.md`) |
+| RF-4.2 | Pago de renovación y notificación a contactos | ✅ Hecho |
 | RF-5.1 | Alternar idioma español/inglés | ✅ Hecho |
 
 ## Documentación de los casos

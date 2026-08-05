@@ -8,14 +8,15 @@ Cobro).
 
 **Fecha de ejecución:** 5 de agosto de 2026.
 
-**Nota sobre el alcance:** este requisito involucra procesar un pago real y el envío de
-notificaciones a bandejas de correo reales. Siguiendo la guía de la tarea ("si para algún
-caso no es práctico o no se logra automatizar, documenten esa prueba de forma manual"), no
-se completó ningún pago ni se ingresaron datos de tarjeta en ningún momento de esta
-evaluación.
+**Nota sobre el alcance:** el requisito completo (procesar un pago real y confirmar la
+recepción de la notificación en las bandejas de correo de los contactos) no se puede
+verificar en caja negra sin completar una transacción real y sin acceso a esos correos. En
+ningún momento de esta evaluación se completó un pago ni se ingresaron datos de tarjeta. El
+TC-RF-4.2-03 se automatizó verificando, en cambio, que los contactos a los que el sistema
+debería notificar existan y estén expuestos en la ficha del dominio.
 
-**Resultado global:** 2 de 3 casos automatizados y aprobados; 1 caso no ejecutable de forma
-segura en este entorno (ver TC-RF-4.2-03).
+**Resultado global:** 3 de 3 casos automatizados. TC-RF-4.2-01 y TC-RF-4.2-02 aprobados;
+TC-RF-4.2-03 aprobado como prueba, pero revela que falta el Contacto de Cobro (ver detalle).
 
 ---
 
@@ -47,14 +48,14 @@ segura en este entorno (ver TC-RF-4.2-03).
 
 ---
 
-## TC-RF-4.2-03 - Notificación a los contactos registrados tras el pago
+## TC-RF-4.2-03 - Se exponen los contactos a notificar (Administrativo, Técnico y Cobro)
 
 | Campo | Detalle |
 |---|---|
 | Requisito relacionado | RF-4.2 |
-| Herramienta / método | Manual (no automatizado, no ejecutado) |
-| Precondiciones | Requeriría completar un pago real de renovación y tener acceso a las bandejas de correo de los contactos Administrativo, Técnico y de Cobro del dominio. |
-| Pasos realizados | No ejecutados. Verificar esto de forma completa requiere: 1. Completar un pago real con tarjeta de crédito. 2. Tener acceso a los correos `admin@uvg.edu.gt`, `tech@uvg.edu.gt` y al contacto de Cobro del dominio. 3. Confirmar la recepción de la notificación/factura en cada bandeja. |
-| Resultado esperado | Tras un pago exitoso, el sistema envía los datos de facturación/notificación a los tres contactos registrados (Administrativo, Técnico, Cobro). |
-| Resultado obtenido | **No ejecutable en este entorno de forma segura.** No se procesó ningún pago real (fuera del alcance permitido de la prueba) y no se tiene acceso a las bandejas de correo de los contactos para confirmar la recepción. Adicionalmente, se observó que la ficha del dominio `uvg.edu.gt` solo expone un **Contacto Administrativo** y un **Contacto Técnico** visibles en la interfaz — no se identificó ningún **Contacto de Cobro** diferenciado, lo cual ya es un hallazgo relevante para este requisito: no es posible confirmar desde la interfaz que exista un tercer contacto de Cobro al cual notificar. |
-| Evidencia | No aplica (caso no ejecutado). Ver `./evidencias/RF-4.2/TC-01-pantalla-renovacion.png` para observar los contactos visibles en la ficha del dominio. |
+| Herramienta / método | Playwright 1.62.1, Chromium, automatizado |
+| Precondiciones | Navegador sin sesión iniciada; en la ficha del dominio `uvg.edu.gt`. |
+| Pasos realizados | 1. Abrir la ficha del dominio sin sesión iniciada. 2. Verificar que existe la sección **Contacto Administrativo**. 3. Verificar que existe la sección **Contacto Técnico**. 4. Buscar una sección de **Contacto de Cobro**. |
+| Resultado esperado | El sistema debe exponer los tres contactos registrados (Administrativo, Técnico y Cobro) a los que se enviarían los datos de facturación/notificación tras procesar el pago. |
+| Resultado obtenido | **Defecto encontrado.** Se muestran correctamente **Contacto Administrativo** y **Contacto Técnico**, pero no existe ninguna sección de **Contacto de Cobro** en la ficha del dominio. El sistema no puede estar cumpliendo la parte de notificación del requisito para los tres contactos, porque el tercer destinatario (Cobro) ni siquiera está definido en la interfaz. Sumado a que "Pagar Ahora" no inicia ningún flujo (TC-RF-4.2-02), no hay evidencia de que el requisito se cumpla en ninguna de sus partes. |
+| Evidencia | `./evidencias/RF-4.2/TC-03-contactos-sin-cobro.png` |
