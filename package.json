@@ -6,6 +6,7 @@
   "scripts": {
     "test": "playwright test",
     "test:rf-1.1": "playwright test casos/rf-1.1.spec.ts",
+    "test:rf-2.2": "playwright test casos/RF-2.2/rf-2.2.spec.ts",
     "report": "playwright show-report evidencias/reporte-html"
   },
   "repository": {
