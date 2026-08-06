@@ -6,10 +6,21 @@ test.use({
   ignoreHTTPSErrors: true,
 });
 
+async function cerrar_aviso(page: Page) {
+   const closeBtn = page.locator('#testPageNoticeModal button', { hasText: 'Entendido' });
+   try {
+      await closeBtn.waitFor({ state: 'visible', timeout: 3000 });
+      await closeBtn.click();
+      await closeBtn.waitFor({ state: 'hidden', timeout: 3000 });
+   } catch {
+   }
+}
+
 async function abrirInicio(page: Page) {
   const response = await page.goto(TARGET_URL, {
     waitUntil: 'domcontentloaded',
   });
+  await cerrar_aviso(page);
 
   expect(response, 'La navegación debe producir una respuesta HTTP').not.toBeNull();
   expect(response!.status(), 'La portada debe responder sin error HTTP').toBeLessThan(400);
@@ -30,6 +41,7 @@ async function buscarDominio(page: Page, dominio: string) {
   await buscador.fill(dominio);
 
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
+  await cerrar_aviso(page);
 }
 
 test.describe('RF-2.1 - Buscador de disponibilidad de dominios', () => {

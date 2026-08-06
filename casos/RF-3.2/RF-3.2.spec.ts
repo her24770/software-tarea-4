@@ -1,6 +1,6 @@
 import {test, expect, Page} from '@playwright/test';
 
-const URL = "https://gt.nic.gt/"
+const TARGET_URL = process.env.TARGET_URL ?? 'https://dev2.registro.gt/';
 const DOMAIN_QUERY = 'prueba123'
 
 async function cerrar_aviso(page: Page) {
@@ -14,7 +14,7 @@ async function cerrar_aviso(page: Page) {
 }
 
 async function agregarCarrito(page: Page, query: string) { //Agrega dominio al carrito y abre la pagina del carrito
-   await page.goto(URL);
+   await page.goto(TARGET_URL);
    await cerrar_aviso(page);
 
    await page.fill('#heroSearchInput', query);

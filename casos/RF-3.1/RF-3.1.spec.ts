@@ -1,11 +1,22 @@
 import {test, expect, Page} from '@playwright/test';
 
-const URL = "https://gt.nic.gt/"
+const TARGET_URL = process.env.TARGET_URL ?? 'https://dev2.registro.gt/';
 const DOMAIN_QUERY = 'prueba123'
 const EXPECTED_DOMAIN = 'prueba123.com.gt'
 
+async function cerrar_aviso(page: Page) {
+   const closeBtn = page.locator('#testPageNoticeModal button', { hasText: 'Entendido' });
+   try {
+      await closeBtn.waitFor({ state: 'visible', timeout: 3000 });
+      await closeBtn.click();
+      await closeBtn.waitFor({ state: 'hidden', timeout: 3000 });
+   } catch {
+   }
+}
+
 async function search_domain(page: Page, query: string) {
-   await page.goto(URL);
+   await page.goto(TARGET_URL);
+   await cerrar_aviso(page);
    await page.fill('#heroSearchInput', query);
    await page.getByRole('button', { name: /Buscar/i }).first().click();
    await page.waitForURL(/\/results\//);
@@ -25,6 +36,7 @@ test.describe('RF-3.1 - Carrito sin iniciar sesion', () => {
    test('TC-01 - Agregar dominio disponible al carrito', async ({page}) => {
       await search_domain(page, DOMAIN_QUERY);
 
+      await cerrar_aviso(page);
       const reserveBtn = page.locator('.reserve-btn').first();
       await reserveBtn.click();
 
@@ -41,6 +53,7 @@ test.describe('RF-3.1 - Carrito sin iniciar sesion', () => {
       const emptyCart = await get_cart_from_storage(page);
       expect(emptyCart).toHaveLength(0);
 
+      await cerrar_aviso(page);
       const reserveBtn = page.locator('.reserve-btn').first();
       await reserveBtn.click();
       await expect(get_cart_badge(page)).toContainText('1');
@@ -56,6 +69,7 @@ test.describe('RF-3.1 - Carrito sin iniciar sesion', () => {
    test('TC-03 - El carrito persiste luego de recargar la pagina, sin necesidad de iniciar sesion', async ({page}) => {
       await search_domain(page, DOMAIN_QUERY);
 
+      await cerrar_aviso(page);
       const reserveBtn = page.locator('.reserve-btn').first();
       await reserveBtn.click();
       await expect(get_cart_badge(page)).toContainText('1');
