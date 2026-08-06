@@ -28,11 +28,15 @@ Cada ejecución también conserva capturas, video y traza por caso en `evidencia
 ## Ejecutar un requisito individual
 
 ```bash
-npx playwright test casos/RF-1.1/rf-1.1.spec.ts --project=chromium
+npx playwright test casos/RF-1.1/RF-1.1.spec.ts --project=chromium
 npx playwright test casos/RF-1.2/RF-1.2.spec.ts --project=chromium
-npx playwright test casos/RF-2.1/rf-2.1.spec.ts --project=chromium
+npx playwright test casos/RF-1.3/RF-1.3.spec.ts --project=chromium
+npx playwright test casos/RF-2.1/RF-2.1.spec.ts --project=chromium
+npx playwright test casos/RF-2.2/RF-2.2.spec.ts --project=chromium
 npx playwright test casos/RF-2.3/RF-2.3.spec.ts --project=chromium
 npx playwright test casos/RF-3.1/RF-3.1.spec.ts --project=chromium
+npx playwright test casos/RF-3.2/RF-3.2.spec.ts --project=chromium
+npx playwright test casos/RF-4.1/RF-4.1.spec.ts --project=chromium
 npx playwright test casos/RF-4.2/RF-4.2.spec.ts --project=chromium
 npx playwright test casos/RF-5.1/RF-5.1.spec.ts --project=chromium
 ```
@@ -66,14 +70,14 @@ completo.
 | RF | Descripción | Estado |
 |---|---|---|
 | RF-1.1 | Información principal en la página de inicio | ✅ Hecho |
-| RF-1.2 | Resumen de últimas 3 publicaciones de noticias | ✅ Hecho (falla por cambio en `gt.nic.gt`, ver arriba) |
-| RF-1.3 | Estadísticas de dominios por subdominio | ⬜ Pendiente |
+| RF-1.2 | Resumen de últimas 3 publicaciones de noticias | ✅ Hecho |
+| RF-1.3 | Estadísticas de dominios por subdominio | ✅ Hecho |
 | RF-2.1 | Buscador de disponibilidad de dominios | ✅ Hecho |
-| RF-2.2 | Información WHOIS de dominios registrados | ⬜ Pendiente |
+| RF-2.2 | Información WHOIS de dominios registrados | ✅ Hecho |
 | RF-2.3 | Herramienta IDN (Punycode) | ✅ Hecho |
-| RF-3.1 | Carrito sin iniciar sesión (localStorage) | ✅ Hecho (falla por cambio en `gt.nic.gt`, ver arriba) |
-| RF-3.2 | Requiere sesión para finalizar la compra | ⬜ Pendiente |
-| RF-4.1 | Renovación de dominio sin sesión | ⬜ Pendiente |
+| RF-3.1 | Carrito sin iniciar sesión (localStorage) | ✅ Hecho |
+| RF-3.2 | Requiere sesión para finalizar la compra | ✅ Hecho |
+| RF-4.1 | Renovación de dominio sin sesión | ✅ Hecho |
 | RF-4.2 | Pago de renovación y notificación a contactos | ✅ Hecho |
 | RF-5.1 | Alternar idioma español/inglés | ✅ Hecho |
 
