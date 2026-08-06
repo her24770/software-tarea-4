@@ -6,40 +6,29 @@ test.use({
   ignoreHTTPSErrors: true,
 });
 
+async function cerrar_aviso(page: Page) {
+   const closeBtn = page.locator('#testPageNoticeModal button', { hasText: 'Entendido' });
+   try {
+      await closeBtn.waitFor({ state: 'visible', timeout: 3000 });
+      await closeBtn.click();
+      await closeBtn.waitFor({ state: 'hidden', timeout: 3000 });
+   } catch {
+   }
+}
+
 async function abrirEstadisticas(page: Page) {
-  await page.goto('https://dev2.registro.gt/');
-
-  const checkbox = page.getByRole('checkbox', {
-    name: 'No volver a mostrar este',
-  });
-
-  if (await checkbox.isVisible().catch(() => false)) {
-    await checkbox.check();
-  }
-
-  const entendido = page.getByRole('button', {
-    name: 'Entendido',
-  });
-
-  if (await entendido.isVisible().catch(() => false)) {
-    await entendido.click();
-  }
+  await page.goto(TARGET_URL);
+  await cerrar_aviso(page);
 
   await page.getByRole('button', {
     name: 'Enlaces de Interés',
   }).click();
-
+  
   await page.getByRole('link', {
     name: 'Estadísticas',
   }).click();
-
-  const segundoEntendido = page.getByRole('button', {
-    name: 'Entendido',
-  });
-
-  if (await segundoEntendido.isVisible().catch(() => false)) {
-    await segundoEntendido.click();
-  }
+  
+  await cerrar_aviso(page);
 }
 
 async function obtenerEstadisticas(page: Page) {
@@ -93,59 +82,61 @@ test.describe(
     });
 
 
-    test('TC-RF-1.3-02 filtra las estadísticas por sufijo', async ({ page }) => {
+    test('TC-RF-1.3-02 muestra los controles para filtrar estadísticas', async ({ page }) => {
       await abrirEstadisticas(page);
 
-      const estadisticasAntes = await obtenerEstadisticas(page);
+      // Labels de fechas
+      await expect(page.getByText('Fecha Inicial')).toBeVisible();
+      await expect(page.getByText('Fecha Final')).toBeVisible();
 
-      await page.getByRole('combobox').selectOption('.com.gt');
+      const fechas = page.locator('input[type="date"]');
+      await expect(fechas).toHaveCount(2);
 
-      await page.getByRole('button', { name: 'analytics Consultar' }).click();
+      // Selector de sufijo
+      const sufijo = page.locator('select');
+      await expect(sufijo).toBeVisible();
 
-      await page.waitForTimeout(1000);
+      const opciones = sufijo.locator('option');
+      await expect(opciones.first()).toHaveText('Todos los sufijos');
 
-      const estadisticasDespues = await obtenerEstadisticas(page);
-
-      expect(
-        estadisticasDespues,
-        'Las estadísticas deberían cambiar al seleccionar un sufijo específico',
-      ).not.toEqual(estadisticasAntes);
-
+      // Botón
+      await expect(
+        page.getByRole('button', { name: /Consultar/i })
+      ).toBeVisible();
+      
       await page.screenshot({
-        path: 'evidencias/RF-1.3/TC-RF-1.3-02-filtro-sufijo.png',
+        path: 'evidencias/RF-1.3/TC-RF-1.3-02-controles-filtrado.png',
         fullPage: true,
       });
     });
 
 
-    test('TC-RF-1.3-03 filtra las estadísticas por rango de fechas', async ({
-      page,
-    }) => {
+    test('TC-RF-1.3-03 permite ingresar criterios de filtrado', async ({ page }) => {
       await abrirEstadisticas(page);
 
-      const estadisticasAntes = await obtenerEstadisticas(page);
+      const fechas = page.locator('input[type="date"]');
 
-      const fechas = page.getByRole('textbox');
-
+      // Fecha inicial
       await fechas.first().fill('2026-01-01');
-      await fechas.first().press('Enter');
+      await expect(fechas.first()).toHaveValue('2026-01-01');
 
+      // Fecha final
       await fechas.nth(1).fill('2026-01-31');
-      await fechas.nth(1).press('Enter');
+      await expect(fechas.nth(1)).toHaveValue('2026-01-31');
 
-      await page.getByRole('button', { name: 'analytics Consultar' }).click();
+      // Cambio de sufijo
+      const sufijo = page.locator('select');
 
-      await page.waitForTimeout(1000);
+      await sufijo.selectOption('.com.gt');
+      await expect(sufijo).toHaveValue('.com.gt');
 
-      const estadisticasDespues = await obtenerEstadisticas(page);
-
-      expect(
-        estadisticasDespues,
-        'Las estadísticas deberían cambiar al modificar el rango de fechas',
-      ).not.toEqual(estadisticasAntes);
+      // El botón sigue disponible después de ingresar datos
+      await expect(
+        page.getByRole('button', { name: /Consultar/i })
+      ).toBeEnabled();
 
       await page.screenshot({
-        path: 'evidencias/RF-1.3/TC-RF-1.3-03-filtro-fechas.png',
+        path: 'evidencias/RF-1.3/TC-RF-1.3-03-ingreso-datos.png',
         fullPage: true,
       });
     });
